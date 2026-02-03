@@ -20,6 +20,7 @@ To write a program to predict the profit of a city using the linear regression m
 ```
 DEVELOPED BY: DHARSHINI S N
 REG NO: 212224230062
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
