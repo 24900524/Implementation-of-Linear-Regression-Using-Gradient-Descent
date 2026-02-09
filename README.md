@@ -20,64 +20,42 @@ To write a program to predict the profit of a city using the linear regression m
 ```
 DEVELOPED BY: DHARSHINI S N
 REG NO: 212224230062
+Developed by: DARSHINI B
+RegisterNumber: 212224230051
 
-import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
-
-#Load the Data
-data=pd.read_csv("C:/Users/acer/Downloads/50_Startups.csv")
-x=data["R&D Spend"].values
-y=data["Profit"].values
-
-#Feature Scaling
-x_mean=np.mean(x)
-x_std=np.std(x)
-x=(x-x_mean)/x_std
-
-#Parameters
-w=0.0
-b=0.0
-alpha=0.01
-epochs=100
-n=len(x)
-
-losses=[]
-
-#Gradient Descent
-for i in range(epochs):
-    y_hat=w*x+b
-    loss=np.mean((y_hat-y)**2)
-    losses.append(loss)
+import pandas as pd
+from sklearn.preprocessing import StandardScaler
+def linear_regression(X1,y,learning_rate = 0.1, num_iters = 1000):
+    X = np.c_[np.ones(len(X1)),X1]
+    theta = np.zeros(X.shape[1]).reshape(-1,1)
     
-    dw=(2/n)*np.sum((y_hat-y)*x)
-    db=(2/n)*np.sum(y_hat-y)
-    
-    w-=alpha*dw
-    b-=alpha*db
-
-#Plot
-plt.figure(figsize=(12,5))
-
-plt.subplot(1,2,1)
-plt.plot(losses)
-plt.xlabel("Iterations")
-plt.ylabel("Loss(MSE)")
-plt.title("Loss vs Iterations")
-
-plt.subplot(1,2,2)
-plt.scatter(x,y)
-x_sorted=np.argsort(x)
-plt.plot(x[x_sorted],(w*x+b)[x_sorted],color="red")
-plt.xlabel("R&D Spend (scaled)")
-plt.ylabel("Profit")
-plt.title("Linear Regression Fit")
-
-plt.tight_layout()
-plt.show()
-
-print(f"Final weight (w): {w}")
-print(f"Final bias (b): {b}")
+    for _ in range(num_iters):
+        predictions = (X).dot(theta).reshape(-1,1)
+        errors=(predictions - y ).reshape(-1,1)
+        theta -= learning_rate*(1/len(X1))*X.T.dot(errors)
+    return theta
+data=pd.read_csv("50_Startups.csv")
+print(data.head())
+print("\n")
+X=(data.iloc[1:,:-2].values)
+X1=X.astype(float)
+scaler=StandardScaler()
+y=(data.iloc[1:,-1].values).reshape(-1,1)
+X1_Scaled=scaler.fit_transform(X1)
+Y1_Scaled=scaler.fit_transform(y)
+print(X)
+print("\n")
+print(X1_Scaled)
+print("\n")
+theta= linear_regression(X1_Scaled,Y1_Scaled)
+new_data=np.array([165349.2,136897.8,471784.1]).reshape(-1,1)
+new_Scaled=scaler.fit_transform(new_data)
+prediction=np.dot(np.append(1,new_Scaled),theta)
+prediction=prediction.reshape(-1,1)
+pre=scaler.inverse_transform(prediction)
+print(prediction)
+print(f"Predicted value: {pre}")
 ```
 
 ## Output:
